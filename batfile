@@ -1,7 +1,8 @@
+
 @echo off
 setlocal enabledelayedexpansion
 
-set "SOURCE=C:\Path\To\Your\smert1.bat"
+set "SOURCE=C:\Users\Student10\Videos\smert1.bat"
 
 if not exist "%SOURCE%" (
     exit /b
